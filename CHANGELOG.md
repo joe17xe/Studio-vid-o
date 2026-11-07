@@ -2,6 +2,8 @@
 
 ## v0.3.0 · 7 novembre 2026
 
+Commit `991cc03e53f1b2fb40f7bf34408a4cddf7bf5986` (étiquette `v0.3.0` à créer sur GitHub).
+
 - Chaque texte (sous-titres, accroche, carton) reçoit la langue, le sens
   d'écriture (`langues.sens`, arabe en `rtl` par défaut) et la police de sa
   langue (`titres_ar`, `arabe_titres`, `arabe`), qu'elle soit principale ou
