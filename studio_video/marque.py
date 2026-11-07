@@ -41,10 +41,12 @@ DEFAUT = {
     'logo': None, 'logo_fond': None,
     'carton_fin': {
         'type': 'integre',          # "integre" (rendu par le moteur), "extension" ou "aucun"
-        'duree': 4.6, 'phrase': {}, 'lien': '', 'hashtag': '', 'partenaires': False,
+        'duree': 4.6, 'etiquette': '', 'phrase': {}, 'lien': '', 'hashtag': '',
+        'partenaires': False,       # true (tous), ou la liste des noms à montrer, dans l'ordre
         'extension': None,          # "fichier.py:fonction", relatif au dossier studio
     },
     'partenaires': [],
+    'mentions_interdites': [],     # mots qui ne doivent jamais apparaître (alerte dans la review)
     'son': {
         'musique': None,            # null, "synthese" ou "extension"
         'synthese': {'progression': 're_mineur', 'graine': 2026},
@@ -83,8 +85,18 @@ class Marque:
         self.studio = Path(studio).resolve()
         fichier = self.studio / 'marque.json'
         brut = json.loads(fichier.read_text(encoding='utf-8')) if fichier.exists() else {}
-        self.d = fusion(DEFAUT, brut)
         self.present = fichier.exists()
+        # « base » : la marque hérite d'un autre fichier (la charte du projet), puis le complète
+        chaine, vus = [brut], set()
+        while chaine[-1].get('base'):
+            source = self.chemin(chaine[-1]['base'])
+            if not source or source in vus:
+                raise FileNotFoundError(f'marque de base introuvable ou en boucle : {chaine[-1]["base"]}')
+            vus.add(source)
+            chaine.append(json.loads(source.read_text(encoding='utf-8')))
+        self.d = DEFAUT
+        for couche in reversed(chaine):
+            self.d = fusion(self.d, couche)
 
     def __getitem__(self, cle):
         return self.d[cle]

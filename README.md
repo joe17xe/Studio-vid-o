@@ -40,7 +40,7 @@ studio/
 ## Installer
 
 ```bash
-pip install "studio-video @ git+https://github.com/joe17xe/Studio-vid-o@v0.1.0"
+pip install "studio-video @ git+https://github.com/joe17xe/Studio-vid-o@v0.2.0"
 studio-video outils --studio studio --installer   # installe ce qui manque, puis teste chaque outil
 ```
 
@@ -81,17 +81,19 @@ chemins sont relatifs au dossier studio, sinon à la racine du dépôt du projet
 
 | Champ | Rôle |
 |---|---|
+| `base` | (option) une autre marque dont celle-ci hérite, par exemple la charte du projet (`"communication/charte/marque.json"`) ; les champs écrits ici la complètent ou la remplacent |
 | `nom` | nom du projet (page de review, essai) |
-| `couleurs` | `fond`, `fond_2` (dégradés), `texte`, `texte_doux`, `accent`, `accent_2`, `mot_actif`, `fond_sous_titres`, `voile` (accroche), `seconde_langue`, `lueur` (option : halo du carton) |
+| `couleurs` | `fond`, `fond_2` (dégradés), `texte`, `texte_doux`, `accent`, `accent_2`, `mot_actif`, `fond_sous_titres`, `voile` (accroche), `seconde_langue`, `lueur` (option : halo du carton) ; `degrade` (option : `haut`, `bas`, `lueur`, pour le fond du carton) |
 | `polices` | par rôle : `titres`, `texte`, `sous_titres`, `arabe` (et tout autre rôle). Chaque rôle : `famille`, `graisse`, et `google_fonts` (`"Fraunces:opsz,wght@9..144,600"`) **ou** `fichier` (un `.ttf` du dépôt) |
 | `langues` | `principale` (langue de Whisper et des sous-titres) et `secondes` (traductions, dans l'ordre) |
 | `sous_titres` | `taille`, `taille_seconde`, `mots_par_carte`, `caracteres_par_carte`, `seconde` (langue affichée dessous, sinon la première des `secondes`), `separateur` (`trait`, `pouls`, `aucun`), `rayon` |
 | `formats.vertical` | `largeur`, `hauteur`, `zone_utile` (`y_min`, `y_max`) |
 | `logo`, `logo_fond` | logo du carton ; `logo_fond` (ex. `#FFFFFF`) le pose sur une pastille |
 | `partenaires` | `[{"nom", "fichier"}]`, posés sur des tuiles blanches |
-| `carton_fin` | `type` : `integre` (rendu par le moteur), `extension` ou `aucun` ; `duree`, `phrase` (par langue), `lien`, `hashtag`, `partenaires` (true : afficher les tuiles), `etiquette_partenaires`, `extension` |
+| `carton_fin` | `type` : `integre` (rendu par le moteur), `extension` ou `aucun` ; `duree`, `etiquette` (petit titre en capitales espacées sous le logo), `phrase` (par langue), `lien`, `hashtag`, `partenaires` (`true` : toutes les tuiles ; ou la liste des noms à montrer, dans l'ordre), `etiquette_partenaires`, `extension` |
 | `son` | `musique` : `null`, `synthese` (musique originale du moteur : `synthese.progression` = `re_mineur`, `fa_majeur`, `sol_majeur` ; `synthese.graine`) ou `extension` ; `voix_lufs`, `musique_sous_voix_db`, `musique_pause_db`, `sonie_cible`, `crete_max` |
 | `montage` | `seuil_db`, `blanc_min`, `marge_avant`, `marge_apres`, `cadrage_x`, `etalonnage` (filtre ffmpeg), `modele` (Whisper) |
+| `mentions_interdites` | mots qui ne doivent jamais apparaître ; la page de review alerte s'ils sont dans la transcription, une traduction ou l'accroche |
 | `controles` | les points à vérifier du projet, ajoutés aux points communs dans la page de review |
 
 ### Les extensions

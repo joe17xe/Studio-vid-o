@@ -1,5 +1,15 @@
 # Journal des versions
 
+## v0.2.0 · 7 novembre 2026
+
+Nouveaux réglages de `marque.json`, sans effet sur les marques qui ne les
+utilisent pas :
+- `base` : hériter d'une autre marque (la charte du projet) puis la compléter ;
+- `couleurs.degrade` (`haut`, `bas`, `lueur`) pour le fond du carton ;
+- `carton_fin.etiquette` (petit titre sous le logo) et `carton_fin.partenaires`
+  en liste de noms (choix et ordre des tuiles) ;
+- `mentions_interdites` : alerte dans la page de review.
+
 ## v0.1.0 · 7 novembre 2026
 
 Commit `f3879871ddfe72024dc6144cdbdda29d13430eb3` (étiquette `v0.1.0` à créer sur GitHub).

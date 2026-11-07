@@ -54,6 +54,8 @@ def page_carton(marque):
     if logo:
         img = f'<img src="{logo.as_uri()}" style="width:{260 if pastille else 330}px">'
         ajout(f'<div class="pastille">{img}</div>' if pastille else img, 0.55)
+    if cf.get('etiquette'):
+        ajout(f'<p class="etiquette">{html.escape(cf["etiquette"])}</p>', 0.25)
     phrase = cf.get('phrase') or {}
     if phrase.get(marque['langues']['principale']):
         ajout(f'<p class="titre">{phrase[marque["langues"]["principale"]]}</p>')
@@ -67,16 +69,22 @@ def page_carton(marque):
         ajout(f'<p class="lien">{html.escape(cf["lien"])}</p>', 0.3)
     if cf.get('hashtag'):
         ajout(f'<p class="hashtag">{html.escape(cf["hashtag"])}</p>', 0.3)
-    if cf.get('partenaires') and marque['partenaires']:
+    choix = cf.get('partenaires')
+    if choix and marque['partenaires']:
+        liste = marque['partenaires'] if choix is True else \
+            [p for nom in choix for p in marque['partenaires'] if p.get('nom') == nom]
         tuiles = ''.join(f'<div class="tuile"><img src="{marque.chemin(p["fichier"]).as_uri()}"></div>'
-                         for p in marque['partenaires'] if marque.chemin(p.get('fichier')))
+                         for p in liste if marque.chemin(p.get('fichier')))
         ajout(f'<p class="etiquette">{html.escape(cf.get("etiquette_partenaires", "Avec"))}</p>'
               f'<div class="tuiles">{tuiles}</div>', 0.3)
-    lueur = (f', radial-gradient(60% 40% at 90% 95%, {c["lueur"]} 0%, transparent 70%)' if c.get('lueur') else '')
+    deg = c.get('degrade') or {}
+    haut_c, bas_c = deg.get('haut', c['fond_2']), deg.get('bas', c['fond'])
+    lueur_c = deg.get('lueur', c.get('lueur'))
+    lueur = (f'radial-gradient(60% 40% at 90% 95%, {lueur_c} 0%, transparent 70%), ' if lueur_c else '')
     css = f"""{marque.polices_css()}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 html, body {{ width: {L}px; height: {H}px; overflow: hidden; }}
-body {{ background: radial-gradient(120% 80% at 30% 8%, {c['fond_2']} 0%, {c['fond']} 62%){lueur};
+body {{ background: {lueur}radial-gradient(120% 80% at 30% 8%, {haut_c} 0%, {bas_c} 62%);
        color: {c['texte']}; -webkit-font-smoothing: antialiased; }}
 .zone {{ position: absolute; left: 90px; right: 90px; top: {haut}px; bottom: {H - bas}px; display: flex;
          flex-direction: column; align-items: center; justify-content: center; gap: 30px; text-align: center; }}

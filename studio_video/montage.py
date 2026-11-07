@@ -641,6 +641,11 @@ def monter(rush, studio, args, travail=None):
         vieux.unlink()
     cles = images_cles(sortie, instants, dossier_review)
     forme_onde(rush, segments, info, dossier_review / 'coupes.png', marque)
+    textes = [texte_de(p) for p in phrases] + [p.get(lg, '') for p in phrases for lg in secondes] + \
+        [str(v) for v in (m.get('accroche') or {}).values()]
+    for mot in marque['mentions_interdites']:
+        if any(mot.lower() in t.lower() for t in textes):
+            alertes.insert(0, f'Mention interdite par la marque : « {mot} » apparaît dans le texte. À retirer avant export.')
     if 'estimé' in m['transcription'].get('source', ''):
         alertes.insert(0, 'Horodatage estimé (sans Whisper) : vérifier que les sous-titres suivent bien la voix.')
     commande = f'studio-video monter {m["rush"]} --studio {studio}' + (f' --travail {travail}' if travail != Path(studio).resolve() else '') + ' --exporter'

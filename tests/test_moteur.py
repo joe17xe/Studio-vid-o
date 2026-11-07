@@ -55,3 +55,33 @@ def test_chemin_relatif_au_depot(tmp_path):
     m = Marque(tmp_path / 'studio')
     assert m.chemin('logos/l.png') == (tmp_path / 'logos' / 'l.png').resolve()
     assert m.chemin('absent.png') is None
+
+
+def test_base_heritee_puis_completee(tmp_path):
+    (tmp_path / '.git').mkdir()
+    (tmp_path / 'charte').mkdir()
+    (tmp_path / 'charte' / 'marque.json').write_text(json.dumps(
+        {'nom': 'Charte', 'couleurs': {'accent': '#111111', 'fond': '#222222'}, 'mentions_interdites': ['X']}))
+    (tmp_path / 'studio').mkdir()
+    (tmp_path / 'studio' / 'marque.json').write_text(json.dumps(
+        {'base': 'charte/marque.json', 'couleurs': {'accent': '#333333'}}))
+    m = Marque(tmp_path / 'studio')
+    assert m['nom'] == 'Charte'
+    assert m.couleurs['accent'] == '#333333' and m.couleurs['fond'] == '#222222'
+    assert m['mentions_interdites'] == ['X']
+
+
+def test_carton_partenaires_choisis_et_degrade(tmp_path):
+    from studio_video.carton import page_carton
+    (tmp_path / '.git').mkdir()
+    for n in ('a', 'b'):
+        (tmp_path / f'{n}.png').write_bytes(b'x')
+    (tmp_path / 'studio').mkdir()
+    (tmp_path / 'studio' / 'marque.json').write_text(json.dumps({
+        'polices': {}, 'couleurs': {'degrade': {'haut': '#ABCDEF', 'lueur': 'rgba(1,2,3,.5)'}},
+        'partenaires': [{'nom': 'A', 'fichier': 'a.png'}, {'nom': 'B', 'fichier': 'b.png'}],
+        'carton_fin': {'partenaires': ['B'], 'etiquette': 'SIGNATURE', 'phrase': {'fr': 'Merci.'}}}))
+    html, _ = page_carton(Marque(tmp_path / 'studio'))
+    assert 'b.png' in html and 'a.png' not in html
+    assert '#ABCDEF' in html and 'rgba(1,2,3,.5)' in html
+    assert html.index('SIGNATURE') < html.index('Merci.')
