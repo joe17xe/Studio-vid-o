@@ -81,11 +81,11 @@ chemins sont relatifs au dossier studio, sinon à la racine du dépôt du projet
 
 | Champ | Rôle |
 |---|---|
-| `base` | (option) une autre marque dont celle-ci hérite, par exemple la charte du projet (`"communication/charte/marque.json"`) ; les champs écrits ici la complètent ou la remplacent |
+| `base` | (option) une autre marque dont celle-ci hérite, par exemple la charte du projet (`"communication/charte/marque.json"`), ou une variante qui hérite du studio principal ; chaque chemin `base` se lit depuis le fichier qui le déclare ; les champs écrits ici complètent ou remplacent la base |
 | `nom` | nom du projet (page de review, essai) |
 | `couleurs` | `fond`, `fond_2` (dégradés), `texte`, `texte_doux`, `accent`, `accent_2`, `mot_actif`, `fond_sous_titres`, `voile` (accroche), `seconde_langue`, `lueur` (option : halo du carton) ; `degrade` (option : `haut`, `bas`, `lueur`, pour le fond du carton) |
-| `polices` | par rôle : `titres`, `texte`, `sous_titres`, `arabe` (et tout autre rôle). Chaque rôle : `famille`, `graisse`, et `google_fonts` (`"Fraunces:opsz,wght@9..144,600"`) **ou** `fichier` (un `.ttf` du dépôt) |
-| `langues` | `principale` (langue de Whisper et des sous-titres) et `secondes` (traductions, dans l'ordre) |
+| `polices` | par rôle : `titres`, `texte`, `sous_titres`, `arabe` (et tout autre rôle). Chaque rôle : `famille`, `graisse`, et `google_fonts` (`"Fraunces:opsz,wght@9..144,600"`) **ou** `fichier` (un `.ttf` du dépôt). Un texte dans une langue prend la police `<rôle>_<langue>` (`titres_ar`), sinon, pour l'arabe, `arabe_<rôle>` (`arabe_titres`) puis `arabe`, sinon le rôle lui-même |
+| `langues` | `principale` (langue de Whisper et des sous-titres) et `secondes` (traductions, dans l'ordre) ; `sens` (option, ex. `{"ar": "rtl"}`) : chaque texte reçoit `lang` et le sens d'écriture de sa langue (arabe, hébreu, persan, ourdou de droite à gauche par défaut), quelle que soit sa place (principale ou seconde) |
 | `sous_titres` | `taille`, `taille_seconde`, `mots_par_carte`, `caracteres_par_carte`, `seconde` (langue affichée dessous, sinon la première des `secondes`), `separateur` (`trait`, `pouls`, `aucun`), `rayon` |
 | `formats.vertical` | `largeur`, `hauteur`, `zone_utile` (`y_min`, `y_max`) |
 | `logo`, `logo_fond` | logo du carton ; `logo_fond` (ex. `#FFFFFF`) le pose sur une pastille |

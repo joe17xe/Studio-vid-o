@@ -1,5 +1,16 @@
 # Journal des versions
 
+## v0.3.0 · 7 novembre 2026
+
+- Chaque texte (sous-titres, accroche, carton) reçoit la langue, le sens
+  d'écriture (`langues.sens`, arabe en `rtl` par défaut) et la police de sa
+  langue (`titres_ar`, `arabe_titres`, `arabe`), qu'elle soit principale ou
+  seconde. Corrige une vidéo à voix arabe avec le français dessous : la ligne
+  principale et la phrase du carton n'avaient pas `dir="rtl"`, et le point
+  final passait du mauvais côté.
+- `base` : un chemin de base se lit depuis le fichier qui le déclare (une
+  variante peut hériter d'un studio qui hérite lui-même d'une charte).
+
 ## v0.2.0 · 7 novembre 2026
 
 Commit `66b3da7ff0f89bb07849a80fa93f6c6bfe89cde6` (étiquette `v0.2.0` à créer sur GitHub).

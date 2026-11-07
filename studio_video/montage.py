@@ -242,7 +242,8 @@ def css_calques(marque):
     st = marque['sous_titres']
     L, H, haut, bas = marque.vertical
     seconde = marque.seconde
-    pile_seconde = marque.pile('arabe') if seconde == 'ar' else marque.pile('texte')
+    role_sec = marque.role_pour('texte', seconde) if seconde else 'texte'
+    pile_seconde = marque.pile(role_sec)
     return f"""{marque.polices_css()}
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 html, body {{ width: {L}px; height: {H}px; background: transparent; overflow: hidden; }}
@@ -255,7 +256,7 @@ html, body {{ width: {L}px; height: {H}px; background: transparent; overflow: hi
 .prin span {{ display: inline-block; }}
 .prin .avenir {{ opacity: .62; }}
 .prin .actif {{ color: {c['mot_actif']}; transform: scale(1.06); }}
-.sec {{ font-family: {pile_seconde}; font-weight: {marque.graisse('arabe') if seconde == 'ar' else 400};
+.sec {{ font-family: {pile_seconde}; font-weight: {marque.graisse(role_sec)};
        font-size: {st.get('taille_seconde', 42)}px; line-height: 1.6; color: {c['seconde_langue']}; text-wrap: balance; }}
 .accroche {{ position: absolute; left: 0; right: 0; top: 0; height: 760px;
             background: linear-gradient(180deg, {c['voile']} 0%, transparent 100%); }}
@@ -272,7 +273,9 @@ def calques(cartes_, phrases, accroche, marque, dossier):
     dossier.mkdir(parents=True, exist_ok=True)
     css = css_calques(marque)
     seconde = marque.seconde
-    rtl = ' dir="rtl"' if seconde == 'ar' else ''
+    principale = marque['langues']['principale']
+    attr_prin = marque.attributs('sous_titres', principale)
+    attr_sec = marque.attributs('texte', seconde) if seconde else ''
     motif = carton_mod.motif_svg(marque)
     L, H, _, _ = marque.vertical
     etats = []
@@ -293,15 +296,15 @@ def calques(cartes_, phrases, accroche, marque, dossier):
             for k in range(len(c['mots'])):
                 mots = ' '.join(f'<span class="{"actif" if j == k else "dit" if j < k else "avenir"}">'
                                 f'{html.escape(m["mot"])}</span>' for j, m in enumerate(c['mots']))
-                bas = f'{motif}<p class="sec"{rtl}>{html.escape(trad)}</p>' if trad else ''
+                bas = f'{motif}<p class="sec"{attr_sec}>{html.escape(trad)}</p>' if trad else ''
                 debut = c['debut'] if k == 0 else c['mots'][k]['d']
                 fin = c['fin'] if k == len(c['mots']) - 1 else c['mots'][k + 1]['d']
                 etats.append((debut, fin, photo(f'c{ic:03d}-{k:02d}',
-                                                f'<div class="st"><div class="bloc"><p class="prin">{mots}</p>{bas}</div></div>')))
+                                                f'<div class="st"><div class="bloc"><p class="prin"{attr_prin}>{mots}</p>{bas}</div></div>')))
         image_accroche = None
         if accroche:
-            principale = marque['langues']['principale']
-            lignes = ''.join(f'<p class="{"prin" if lg == principale else "sec"}"{" dir=rtl" if lg == "ar" else ""}>'
+            lignes = ''.join(f'<p class="{"prin" if lg == principale else "sec"}"'
+                             f'{marque.attributs("titres" if lg == principale else "texte", lg)}>'
                              f'{accroche[lg]}</p>' for lg in [principale] + marque['langues'].get('secondes', [])
                              if accroche.get(lg))
             # compatibilité : « fr » pour la langue principale

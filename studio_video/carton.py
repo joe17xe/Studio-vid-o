@@ -58,10 +58,11 @@ def page_carton(marque):
         ajout(f'<p class="etiquette">{html.escape(cf["etiquette"])}</p>', 0.25)
     phrase = cf.get('phrase') or {}
     if phrase.get(marque['langues']['principale']):
-        ajout(f'<p class="titre">{phrase[marque["langues"]["principale"]]}</p>')
+        principale = marque['langues']['principale']
+        ajout(f'<p class="titre"{marque.attributs("titres", principale)}>{phrase[principale]}</p>')
     for lg in marque['langues'].get('secondes', []):
         if phrase.get(lg):
-            ajout(f'<p class="second"{" dir=rtl" if lg == "ar" else ""}>{phrase[lg]}</p>', 0.3)
+            ajout(f'<p class="second"{marque.attributs("texte", lg)}>{phrase[lg]}</p>', 0.3)
     m = motif_svg(marque)
     if m:
         ajout(m, 0.3)

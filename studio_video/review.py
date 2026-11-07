@@ -72,7 +72,7 @@ def ecrire_review(m, nom, dossier, video, mesures, cles, brolls, alertes, phrase
         trad = ''
         for lg in secondes:
             if p.get(lg):
-                trad += f'<div class="trad"{" dir=rtl" if lg == "ar" else ""}><b>{lg}</b> {e(p[lg])}</div>'
+                trad += f'<div class="trad"{" dir=rtl" if marque.sens(lg) == "rtl" else ""}><b>{lg}</b> {e(p[lg])}</div>'
             else:
                 trad += f'<div class="trad vide">{lg} : à écrire dans le fichier de montage (champ « {lg} »)</div>'
         debut = vers_montage(p['mots'][0]['debut'], segments) if p['mots'] else 0

@@ -14,6 +14,8 @@ import urllib.request
 from pathlib import Path
 
 CACHE = Path.home() / '.cache' / 'studio-video'
+RTL = {'ar', 'he', 'fa', 'ur'}          # langues écrites de droite à gauche, sauf avis de langues.sens
+ALIAS_POLICES = {'ar': 'arabe'}        # nom historique du rôle de police d'une langue
 
 DEFAUT = {
     'nom': 'Projet',
@@ -87,12 +89,14 @@ class Marque:
         brut = json.loads(fichier.read_text(encoding='utf-8')) if fichier.exists() else {}
         self.present = fichier.exists()
         # « base » : la marque hérite d'un autre fichier (la charte du projet), puis le complète
-        chaine, vus = [brut], set()
+        chaine, vus, depuis = [brut], set(), self.studio
         while chaine[-1].get('base'):
-            source = self.chemin(chaine[-1]['base'])
+            # le chemin d'une base se lit depuis le fichier qui la déclare
+            source = chercher(chaine[-1]['base'], depuis)
             if not source or source in vus:
                 raise FileNotFoundError(f'marque de base introuvable ou en boucle : {chaine[-1]["base"]}')
             vus.add(source)
+            depuis = source.parent
             chaine.append(json.loads(source.read_text(encoding='utf-8')))
         self.d = DEFAUT
         for couche in reversed(chaine):
@@ -123,18 +127,7 @@ class Marque:
 
     def chemin(self, relatif):
         """Un chemin de marque.json : relatif au dossier studio, sinon au dépôt du projet."""
-        if not relatif:
-            return None
-        p = Path(relatif)
-        if p.is_absolute():
-            return p if p.exists() else None
-        base = self.studio
-        while True:
-            if (base / p).exists():
-                return (base / p).resolve()
-            if (base / '.git').exists() or base.parent == base:
-                return None
-            base = base.parent
+        return chercher(relatif, self.studio)
 
     # --- polices -----------------------------------------------------------------
 
@@ -154,8 +147,43 @@ class Marque:
         roles = [role] + (['arabe'] if role != 'arabe' else [])
         return ', '.join(f"'R-{r}'" for r in roles if r in self.d['polices']) + f', {secours}'
 
+    def sens(self, langue):
+        """« rtl » ou « ltr » : langues.sens de la marque, sinon le sens usuel de la langue."""
+        return (self.d['langues'].get('sens') or {}).get(langue) or ('rtl' if langue in RTL else 'ltr')
+
+    def role_pour(self, role, langue):
+        """La police d'un rôle dans une langue : « titres_ar », sinon « arabe_titres », sinon « arabe »
+        (pour l'arabe), sinon le rôle lui-même."""
+        a = ALIAS_POLICES.get(langue, langue)
+        for r in (f'{role}_{langue}', f'{a}_{role}', a):
+            if isinstance(self.d['polices'].get(r), dict):
+                return r
+        return role
+
+    def attributs(self, role, langue):
+        """Attributs HTML d'un texte : langue, sens d'écriture et police de son rôle dans cette langue."""
+        r = self.role_pour(role, langue)
+        sens = ' dir="rtl"' if self.sens(langue) == 'rtl' else ''
+        return f' lang="{langue}"{sens} style="font-family: {self.pile(r)}; font-weight: {self.graisse(r)}"'
+
     def graisse(self, role):
         return self.d['polices'].get(role, {}).get('graisse', 400)
+
+
+def chercher(relatif, depuis):
+    """Un chemin relatif à « depuis », sinon à un de ses dossiers parents jusqu'à la racine du dépôt."""
+    if not relatif:
+        return None
+    p = Path(relatif)
+    if p.is_absolute():
+        return p if p.exists() else None
+    base = Path(depuis).resolve()
+    while True:
+        if (base / p).exists():
+            return (base / p).resolve()
+        if (base / '.git').exists() or base.parent == base:
+            return None
+        base = base.parent
 
 
 def fichiers_police(spec, marque=None):

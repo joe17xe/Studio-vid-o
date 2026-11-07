@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "studio-video"
-version = "0.2.0"
+version = "0.3.0"
 description = "Moteur de montage vidéo commun : blancs coupés, sous-titres mot par mot, B-roll, musique sous la voix, carton de fin, page de review."
 readme = "README.md"
 license = {text = "MIT"}

@@ -85,3 +85,36 @@ def test_carton_partenaires_choisis_et_degrade(tmp_path):
     assert 'b.png' in html and 'a.png' not in html
     assert '#ABCDEF' in html and 'rgba(1,2,3,.5)' in html
     assert html.index('SIGNATURE') < html.index('Merci.')
+
+
+def test_sens_et_police_par_langue(tmp_path):
+    from studio_video.carton import page_carton
+    (tmp_path / 'marque.json').write_text(json.dumps({
+        'polices': {'titres': {'famille': 'A', 'fichier': 'x.ttf'}, 'arabe': {'famille': 'B', 'fichier': 'x.ttf'},
+                    'arabe_titres': {'famille': 'C', 'fichier': 'x.ttf', 'graisse': 700}},
+        'langues': {'principale': 'ar', 'secondes': ['fr']},
+        'carton_fin': {'phrase': {'ar': 'نربط، نُلهم، نعمل.', 'fr': 'Relier.'}}}))
+    m = Marque(tmp_path)
+    assert m.sens('ar') == 'rtl' and m.sens('fr') == 'ltr'
+    assert m.role_pour('titres', 'ar') == 'arabe_titres'
+    assert m.role_pour('texte', 'ar') == 'arabe'
+    assert m.role_pour('titres', 'fr') == 'titres'
+    a = m.attributs('titres', 'ar')
+    assert 'dir="rtl"' in a and 'lang="ar"' in a and "R-arabe_titres" in a and '700' in a
+    assert 'dir=' not in m.attributs('texte', 'fr')
+    m.polices_css = lambda: ''             # pas de téléchargement de police dans ce test
+    html, _ = page_carton(m)
+    assert '<p class="titre" lang="ar" dir="rtl"' in html
+
+
+def test_base_de_base_lue_depuis_son_fichier(tmp_path):
+    (tmp_path / 'depot' / '.git').mkdir(parents=True)
+    (tmp_path / 'depot' / 'charte').mkdir()
+    (tmp_path / 'depot' / 'charte' / 'marque.json').write_text(json.dumps({'nom': 'Charte'}))
+    (tmp_path / 'depot' / 'studio').mkdir()
+    (tmp_path / 'depot' / 'studio' / 'marque.json').write_text(json.dumps({'base': 'charte/marque.json'}))
+    (tmp_path / 'variante').mkdir()
+    (tmp_path / 'variante' / 'marque.json').write_text(json.dumps(
+        {'base': str(tmp_path / 'depot' / 'studio' / 'marque.json'), 'langues': {'principale': 'ar'}}))
+    m = Marque(tmp_path / 'variante')
+    assert m['nom'] == 'Charte' and m['langues']['principale'] == 'ar'
