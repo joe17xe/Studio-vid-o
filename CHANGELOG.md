@@ -2,6 +2,8 @@
 
 ## v0.4.0 · 7 novembre 2026
 
+Commit `c8eb1cbde2bbc66f4856874f7712acd28d89e9ef` (étiquette `v0.4.0` à créer sur GitHub).
+
 - Fichier de montage : un champ `marque` change la marque pour cette vidéo
   seulement (autre carton de fin, pas de musique, autre phrase…), avec les
   mêmes champs que `marque.json`.
