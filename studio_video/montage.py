@@ -255,7 +255,7 @@ html, body {{ width: {L}px; height: {H}px; background: transparent; overflow: hi
         font-size: {st['taille']}px; line-height: 1.2; color: {c['texte']}; }}
 .prin span {{ display: inline-block; }}
 .prin .avenir {{ opacity: .62; }}
-.prin .actif {{ color: {c['mot_actif']}; transform: scale(1.06); }}
+.prin .actif {{ color: {c['mot_actif']}; transform: scale({st.get('agrandissement_actif', 1.06)}); }}
 .sec {{ font-family: {pile_seconde}; font-weight: {marque.graisse(role_sec)};
        font-size: {st.get('taille_seconde', 42)}px; line-height: 1.6; color: {c['seconde_langue']}; text-wrap: balance; }}
 .accroche {{ position: absolute; left: 0; right: 0; top: 0; height: 760px;
@@ -277,6 +277,7 @@ def calques(cartes_, phrases, accroche, marque, dossier):
     attr_prin = marque.attributs('sous_titres', principale)
     attr_sec = marque.attributs('texte', seconde) if seconde else ''
     motif = carton_mod.motif_svg(marque)
+    agrandissement = float(marque['sous_titres'].get('agrandissement_actif', 1.06))
     L, H, _, _ = marque.vertical
     etats = []
     with navigateur.onglet(L, H) as onglet:
@@ -286,6 +287,11 @@ def calques(cartes_, phrases, accroche, marque, dossier):
                                encoding='utf-8')
             onglet.goto(fichier.as_uri())
             onglet.wait_for_function("document.fonts.status === 'loaded'")
+            # chaque mot garde autour de lui la place de son agrandissement : le mot actif ne mord
+            # jamais sur l'espace voisin, et la carte ne bouge pas d'un mot actif à l'autre
+            onglet.evaluate("""k => document.querySelectorAll('.prin span').forEach(s => {
+                const w = s.getBoundingClientRect().width / (s.classList.contains('actif') ? k : 1);
+                s.style.marginInline = (w * (k - 1) / 2).toFixed(2) + 'px'; })""", agrandissement)
             onglet.screenshot(path=str(dossier / f'{nom}.png'), omit_background=True)
             fichier.unlink()
             return dossier / f'{nom}.png'

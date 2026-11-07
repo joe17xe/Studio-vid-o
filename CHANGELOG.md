@@ -1,5 +1,13 @@
 # Journal des versions
 
+## v0.3.1 · 7 novembre 2026
+
+- Sous-titres : le mot actif grossi ne mord plus sur l'espace voisin
+  (« Liban–Yvelinesest », « etl'association » sur les mots longs). Chaque mot
+  garde la place de son grossissement, et la carte ne bouge pas d'un mot actif
+  à l'autre. Le grossissement se règle : `sous_titres.agrandissement_actif`
+  (1.06 par défaut, 1 pour aucun).
+
 ## v0.3.0 · 7 novembre 2026
 
 Commit `991cc03e53f1b2fb40f7bf34408a4cddf7bf5986` (étiquette `v0.3.0` à créer sur GitHub).

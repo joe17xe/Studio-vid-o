@@ -37,6 +37,7 @@ DEFAUT = {
         'seconde': None,            # code de la langue affichée sous le français : "ar", "en"… ou null
         'separateur': 'trait',      # entre les deux langues : "trait", "pouls" ou "aucun"
         'rayon': 30,
+        'agrandissement_actif': 1.06,   # le mot en train d'être dit grossit de 6 % (1 : pas du tout)
     },
     'formats': {'vertical': {'largeur': 1080, 'hauteur': 1920,
                              'zone_utile': {'y_min': 250, 'y_max': 1450}}},

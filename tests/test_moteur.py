@@ -118,3 +118,15 @@ def test_base_de_base_lue_depuis_son_fichier(tmp_path):
         {'base': str(tmp_path / 'depot' / 'studio' / 'marque.json'), 'langues': {'principale': 'ar'}}))
     m = Marque(tmp_path / 'variante')
     assert m['nom'] == 'Charte' and m['langues']['principale'] == 'ar'
+
+
+def test_agrandissement_du_mot_actif_reglable(tmp_path):
+    from studio_video.montage import css_calques
+    m = Marque(tmp_path)
+    m.polices_css = lambda: ''
+    assert m['sous_titres']['agrandissement_actif'] == 1.06
+    assert 'scale(1.06)' in css_calques(m)
+    (tmp_path / 'marque.json').write_text(json.dumps({'sous_titres': {'agrandissement_actif': 1}}))
+    m = Marque(tmp_path)
+    m.polices_css = lambda: ''
+    assert 'scale(1)' in css_calques(m)
