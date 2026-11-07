@@ -45,8 +45,11 @@ studio-video outils --studio studio --installer   # installe ce qui manque, puis
 ```
 
 Il faut aussi `ffmpeg`, un Chromium pour Playwright, et `espeak-ng` pour les
-essais. Chaque projet **fige une version** (`@v0.1.0`) : une évolution du moteur
-ne change rien chez lui tant qu'il ne choisit pas de monter de version.
+essais. Chaque projet **fige une version** : une évolution du moteur ne change
+rien chez lui tant qu'il ne choisit pas de monter de version. On fige par
+l'étiquette (`@v0.1.0`) ou, ce qui revient au même, par l'empreinte exacte du
+commit (`@f3879871…`) ; les versions et leurs empreintes sont dans
+`CHANGELOG.md`.
 
 Réseau : les polices viennent de Google Fonts (`fonts.googleapis.com`,
 `fonts.gstatic.com`) ; le modèle Whisper de Hugging Face (`huggingface.co`,
