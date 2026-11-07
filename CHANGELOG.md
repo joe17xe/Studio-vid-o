@@ -2,6 +2,8 @@
 
 ## v0.2.0 · 7 novembre 2026
 
+Commit `66b3da7ff0f89bb07849a80fa93f6c6bfe89cde6` (étiquette `v0.2.0` à créer sur GitHub).
+
 Nouveaux réglages de `marque.json`, sans effet sur les marques qui ne les
 utilisent pas :
 - `base` : hériter d'une autre marque (la charte du projet) puis la compléter ;
