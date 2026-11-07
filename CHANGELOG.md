@@ -2,6 +2,8 @@
 
 ## v0.3.1 · 7 novembre 2026
 
+Commit `0f894e0ef17cbb22ae6391f9693abaf630cc4780` (étiquette `v0.3.1` à créer sur GitHub).
+
 - Sous-titres : le mot actif grossi ne mord plus sur l'espace voisin
   (« Liban–Yvelinesest », « etl'association » sur les mots longs). Chaque mot
   garde la place de son grossissement, et la carte ne bouge pas d'un mot actif
