@@ -128,6 +128,11 @@ Créé au premier passage, puis corrigé à la main ou par Claude :
 }
 ```
 
+Un champ `"marque"` (facultatif) change la marque **pour cette vidéo
+seulement**, avec les mêmes champs que `marque.json` : par exemple
+`"marque": {"carton_fin": {"modele": "fin-don"}}` pour un appel aux dons, ou
+`"marque": {"son": {"musique": null}}` pour une vidéo sans musique.
+
 `segments` et `mots` sont en temps du rush ; `broll`, `flous` et `accroche` en
 temps de la vidéo montée (celui de la page de review). Les traductions déjà
 écrites sont gardées quand on retranscrit.

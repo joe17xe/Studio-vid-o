@@ -4,4 +4,4 @@ Un projet = un dossier studio/ avec sa marque (marque.json). Le moteur ne contie
 de propre à un projet : chaque besoin devient un réglage générique de marque.json.
 """
 
-__version__ = '0.3.1'
+__version__ = '0.4.0'

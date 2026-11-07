@@ -1,5 +1,11 @@
 # Journal des versions
 
+## v0.4.0 · 7 novembre 2026
+
+- Fichier de montage : un champ `marque` change la marque pour cette vidéo
+  seulement (autre carton de fin, pas de musique, autre phrase…), avec les
+  mêmes champs que `marque.json`.
+
 ## v0.3.1 · 7 novembre 2026
 
 Commit `0f894e0ef17cbb22ae6391f9693abaf630cc4780` (étiquette `v0.3.1` à créer sur GitHub).

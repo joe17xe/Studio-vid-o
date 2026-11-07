@@ -31,7 +31,7 @@ from scipy.ndimage import maximum_filter1d, minimum_filter1d, uniform_filter1d
 
 from . import carton as carton_mod
 from . import musique, navigateur
-from .marque import CACHE, Marque
+from .marque import CACHE, Marque, fusion
 from .review import ecrire_review, forme_onde, images_cles
 
 # Téléchargement classique des modèles Hugging Face (sans le protocole « xet », qui passe par
@@ -470,6 +470,8 @@ def charger_montage(rush, travail, marque, args):
              'titre': nom.replace('-', ' ').replace('_', ' ').capitalize(),
              'reglages': {}, 'segments': None, 'transcription': None,
              'accroche': None, 'broll': [], 'flous': []}
+    if m.get('marque'):      # une vidéo peut changer une partie de la marque (ex. un autre carton de fin)
+        marque.d = fusion(marque.d, m['marque'])
     m['reglages'] = {**marque['montage'], **{k: v for k, v in marque['sous_titres'].items()
                                              if k in ('mots_par_carte', 'caracteres_par_carte')},
                      **m.get('reglages', {})}

@@ -130,3 +130,17 @@ def test_agrandissement_du_mot_actif_reglable(tmp_path):
     m = Marque(tmp_path)
     m.polices_css = lambda: ''
     assert 'scale(1)' in css_calques(m)
+
+
+def test_marque_surchargee_par_une_video(tmp_path):
+    from studio_video.montage import charger_montage
+    (tmp_path / 'marque.json').write_text(json.dumps({'carton_fin': {'modele': 'fin-route', 'lien': 'a'}}))
+    (tmp_path / 'montages').mkdir()
+    (tmp_path / 'montages' / 'x.json').write_text(json.dumps(
+        {'rush': 'a-roll/x.mp4', 'marque': {'carton_fin': {'modele': 'fin-don'}}}))
+    m = Marque(tmp_path)
+
+    class Args:
+        modele = None
+    charger_montage(tmp_path / 'a-roll' / 'x.mp4', tmp_path, m, Args)
+    assert m['carton_fin']['modele'] == 'fin-don' and m['carton_fin']['lien'] == 'a'
