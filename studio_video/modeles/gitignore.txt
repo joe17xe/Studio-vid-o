@@ -1,0 +1,11 @@
+
+# Studio de montage (moteur studio-video) : rushes, B-roll, références et pages de
+# review hors de git ; seuls les exports finis, les montages et les notes sont versionnés.
+{DOSSIER}/a-roll/*
+{DOSSIER}/b-roll/*
+{DOSSIER}/references/videos/*
+!{DOSSIER}/*/LISEZMOI.md
+!{DOSSIER}/references/videos/LISEZMOI.md
+{DOSSIER}/export/*-review/
+{DOSSIER}/.cache/
+{DOSSIER}/.essai/
